@@ -1,0 +1,109 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the beer_recipe module
+ */
+
+/**
+ * Implementation of hook_schema
+ */
+function beer_recipe_schema() {
+  $schema['beer_recipe'] = array(
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The primary identifier for a beer recipe',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+    ),
+  );
+
+  $schema['hops'] = array(
+    'fields' => array(
+      'hop_id' => array(
+        'description' => 'Primary identifier for a specific Hop',
+        'type' => 'serial', 
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Name of the hop used',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'alpha_min' => array(
+        'description' => 'Minimum Alpha Acid',
+        'type' => 'float',
+        'not null' => FALSE,
+      ),
+      'alpha_max' => array(
+        'description' => 'Maximum Alpha Acid',
+        'type' => 'float',
+        'not null' => FALSE,
+      ),
+      'description' => array(
+        'type' => 'text',
+        'description' => 'Description of the hop',
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('hop_id'),
+    'unique keys' => array('name'),
+  );
+
+  $schema['recipe_hops'] => array(
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Node ID of the recipe that the hop is attached to',
+        'type' => 'integer',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'hop_id' => array(
+        'description' => 'ID of the hop',
+        'type' => 'integer',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'alpha' => array(
+        'description' => 'Alpha Acid for the hop addition',
+        'type' => 'float',
+        'not null' => TRUE,
+      ),
+      'amount' => array(
+        'description' => 'Weight of the hops in grams',
+        'type' => 'integer',
+        'not null' => TRUE,
+      ),
+      'form' => array(
+        'description' => 'Form of the hop addition ("Pellet", "Plug", or "Whole")',
+        'type' => 'varchar',
+        'length' => 6,
+      ),
+      'use' => array(
+        'description' => 'When to add the hops',
+        'type' => 'varchar',
+        'length' => 10,
+        'not null' => TRUE,
+      ),
+      'time' => array(
+        'description' => 'Time from the end of boil when the hop is added',
+        'type' => 'integer',
+        'not null' => FALSE,
+        'default' => NULL,
+      ),
+    ),
+    'primary key' => array('nid', 'hop_id'),
+    'unique keys' => array(
+      'nid_hop_use_time' => array( // A hop can be used multiple times with the same "use". (IE. 60 and 45 minute boil hops)
+        'nid',
+        'hop_id',
+        'use',
+        'time',
+      ),
+    ),
+  );
+}

@@ -1,0 +1,6 @@
+name = Beer Recipe
+description = Collect and display beer recipes.
+package = Recipe
+core = 7.x
+files[] = beer_recipe.module
+files[] = beer_recipe.install

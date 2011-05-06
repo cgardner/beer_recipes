@@ -21,7 +21,7 @@ class BeerRecipeTestCase extends DrupalWebTestCase {
    * getInfo method
    * @param void
    * @return array
-   * @author Craig Gardner <craig_gardner@adp.com>
+   * @author Craig Gardner <craig.s.gardner@gmail.com>
    **/
   public static function getInfo() {
     return array(
@@ -35,15 +35,49 @@ class BeerRecipeTestCase extends DrupalWebTestCase {
    * setUp
    * @param void
    * @return void
-   * @author Craig Gardner <craig_gardner@adp.com>
+   * @author Craig Gardner <craig.s.gardner@gmail.com>
    **/
   public function setUp() {
     parent::setUp('beer_recipe');
 
-    $this->privileged_user = $this->drupalCreateUser(array());
+    $this->privileged_user = $this->drupalCreateUser(array(
+      'create beer_recipe content',
+      'edit own beer_recipe content',
+      'edit any beer_recipe content',
+    ));
     $this->drupalLogin($this->privileged_user);
   } // end function setUp
     
+  /**
+   * Test the node/add form for a beer_recipe
+   * @param void
+   * @return void
+   * @author Craig Gardner <craig.s.gardner@gmail.com>
+   **/
+  public function testBeerRecipeNodeForm() {
+    $return = $this->drupalGet('node/add/beer-recipe');    
+
+    // Array of fields stored in 'name' => 'field_id' format
+    $fields = array(
+      'title',
+      'style_id',
+      'brew_type',
+      'beer_description[value]',
+      'brewer',
+      'batch_size',
+      'boil_time',
+      'og',
+      'fg',
+      'fermentation_stages',
+      'fermentation_temperature',
+      'carbonation',
+      'notes[value]',
+    );
+
+    foreach ($fields as $name) {
+      $this->assertFieldByName($name, FALSE);
+    }
+  } // end function testBeerRecipeNodeForm
 } // end class BeerRecipeTestCase extends DrupalWebTestCase
 
 // vim: ft=php tabstop=2 shiftwidth=2

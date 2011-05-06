@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * beer_recipe.module - share beer recipes (based on recipe.module)
+ */
+
+/**
+ * Implementation of hook_node_info()
+ **/
+function beer_recipe_node_info() {
+  return array(
+    'beer_recipe' => array(
+      'name' => t('Beer Recipe'),
+      'base' => 'beer_recipe',
+      'description' => 'Share a beer recipe with fellow brewers',
+    ),
+  );
+} // end function beer_recipe_node_info
+
+/**
+ * Implementation of hook_form()
+ **/
+function beer_recipe_form($node, &$form_state) {
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#required' => TRUE,
+    '#default_value' => !empty($node->title) ? $node->title : '',
+    '#maxlength' => 255,
+  );
+
+  $form['style_id'] = array(
+    '#type' => 'select',
+    '#title' => t('Style'),
+    '#description' => t('Style of the beer.'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->style_id) ? $node->style_id : '',
+    '#options' => _beer_recipe_get_styles(),
+  );
+  
+  $form['beer_description'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Descritpion'),
+    '#format' => isset($node->format) ? $node->format : NULL,
+    '#default_value' => isset($node->description) ? $node->description : '',
+    '#cols' => 60,
+    '#rows' => 1,
+    '#description' => t('A short description of the beer'),
+  );
+
+  $form['brew_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Brew Type'),
+    '#description' => t('Method of Brewing used for the beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->type) ? $node->type : '',
+    '#options' => array(
+      'Extract',
+      'Partial Mash',
+      'All Grain',
+    ),
+  );
+
+  $form['brewer'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Brewer'),
+    '#description' => t('Name of the Brewer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->brewer) ? $node->brewer : '',
+  );
+
+  $form['batch_size'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Batch Size'),
+    '#description' => t('Size of the batch of beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->batch_size) ? $node->batch_size : '5',
+  );
+
+  $form['boil_time'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Boil Length'),
+    '#description' => t('Amount of time (in minutes) that the beer was boiled'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->boil_time) ? $node->boil_time : '60',
+  );
+
+  $form['og'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Original Gravity'),
+    '#description' => t('Original Gravity of the beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->og) ? $node->og : '',
+  );
+
+  $form['fg'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Final Gravity'),
+    '#description' => t('Final Gravity of the beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->fg) ? $node->fg : '',
+  );
+
+  $form['fermentation_stages'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fermentation Stages'),
+    '#description' => t('Number of times the beer was racked during fermentation'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->fermentation_stages) ? $node->fermentation_stages : '',
+  );
+
+  $form['fermentation_temperature'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Fermentation Temperature'),
+    '#description' => t('Temperature the beer was fermented at'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->fermentation_temperature) ? $node->fermentation_temperature : '',
+  );
+
+  $form['carbonation'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Carbonation'),
+    '#description' => t('Volumes of CO2 used to carbonate the beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->carbonation) ? $node->carbonation : '',
+  );
+
+  $form['notes'] = array(
+    '#type' => 'text_format',
+    '#title' => t('Notes'),
+    '#description' => t('Notes on the beer'),
+    '#required' => TRUE,
+    '#default_value' => isset($node->notes) ? $node->notes : '',
+    '#format' => isset($node->format) ? $node->format : NULL,
+  );
+
+  return $form;
+} // end function beer_recipe_form
+
+/**
+ * Get the beer styles
+ * @param void
+ * @return array
+ * @author Craig Gardner <craig_gardner@adp.com>
+ **/
+function _beer_recipe_get_styles() {
+  return array();
+} // end function _beer_recipe_get_styles
+
+// vim: ft=php tabstop=2 shiftwidth=2

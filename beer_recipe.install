@@ -141,7 +141,9 @@ function beer_recipe_schema() {
       ),
     ),
     'primary key' => array('hop_id'),
-    'unique keys' => array('name'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
   );
 
   $schema['recipe_hops'] = array(
@@ -476,7 +478,9 @@ function beer_recipe_schema() {
       ),
     ),
     'primary key' => array('nid', 'misc_id', 'use', 'time'),
-    'unique keys' => array('nid', 'misc_id', 'use', 'time'),
+    'unique keys' => array(
+      'nid_misc_use_time' => array('nid', 'misc_id', 'use', 'time'),
+    ),
     'foreign keys' => array(
       'nid' => array(
         'table' => 'node',

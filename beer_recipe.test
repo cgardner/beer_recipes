@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Beer Recipe Test Cases
+ * @package beer_recipe
+ * @author Craig Gardner <craig.s.gardner@gmail.com>
+ **/
+class BeerRecipeTestCase extends DrupalWebTestCase {
+  /**
+   * Properties |props
+   */
+  /**
+   * Privileged User
+   * @var string
+   **/
+  protected $privileged_user;
+  /**
+   * Public Methods |publics
+   */
+  /**
+   * getInfo method
+   * @param void
+   * @return array
+   * @author Craig Gardner <craig_gardner@adp.com>
+   **/
+  public static function getInfo() {
+    return array(
+      'name' => 'BeerRecipe Tests',
+      'description' => 'Automated Tests for the beer_recipe module',
+      'group' => 'Recipe',
+    );
+  } // end function getInfo
+
+  /**
+   * setUp
+   * @param void
+   * @return void
+   * @author Craig Gardner <craig_gardner@adp.com>
+   **/
+  public function setUp() {
+    parent::setUp('beer_recipe');
+
+    $this->privileged_user = $this->drupalCreateUser(array());
+    $this->drupalLogin($this->privileged_user);
+  } // end function setUp
+    
+} // end class BeerRecipeTestCase extends DrupalWebTestCase
+
+// vim: ft=php tabstop=2 shiftwidth=2

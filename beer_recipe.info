@@ -4,3 +4,4 @@ package = Recipe
 core = 7.x
 files[] = beer_recipe.module
 files[] = beer_recipe.install
+files[] = beer_recipe.test

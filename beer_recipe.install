@@ -144,7 +144,7 @@ function beer_recipe_schema() {
     'unique keys' => array('name'),
   );
 
-  $schema['recipe_hops'] => array(
+  $schema['recipe_hops'] = array(
     'fields' => array(
       'nid' => array(
         'description' => 'Node ID of the recipe that the hop is attached to',
@@ -261,7 +261,7 @@ function beer_recipe_schema() {
     'primary key' => array('fermentable_id'),
   );
 
-  $schema['recipe_fermentables'] => array(
+  $schema['recipe_fermentables'] = array(
     'fields' => array(
       'nid' => array(
         'description' => 'ID of the Recipe to attach the fermentable to',
@@ -306,7 +306,7 @@ function beer_recipe_schema() {
     ),
   );
 
-  $schema['yeast'] => array(
+  $schema['yeast'] = array(
     'fields' => array(
       'yeast_id' => array(
         'description' => 'Unique identifier for a yeast',
@@ -372,7 +372,7 @@ function beer_recipe_schema() {
     'primary key' => array('yeast_id'),
   );
 
-  $schema['recipe_yeast'] => array(
+  $schema['recipe_yeast'] = array(
     'fields' => array(
       'nid' => array(
         'description' => 'Recipe that this yeast is attached to',
@@ -388,7 +388,7 @@ function beer_recipe_schema() {
       ),
       'amount' => array(
         'description' => 'Amount of the yeast used in the recipe',
-        'type' => 'int',int
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -462,7 +462,7 @@ function beer_recipe_schema() {
       ),
       'amount' => array(
         'description' => 'Amount of the ingredient that was used',
-        'type' => 'int',int
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),

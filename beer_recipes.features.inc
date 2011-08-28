@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * beer_recipe_1.features.inc
+ * beer_recipes.features.inc
  */
 
 /**
  * Implementation of hook_node_info().
  */
-function beer_recipe_1_node_info() {
+function beer_recipes_node_info() {
   $items = array(
     'beer_recipe' => array(
       'name' => t('Beer Recipe'),

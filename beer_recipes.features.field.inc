@@ -1,13 +1,13 @@
 <?php
 /**
  * @file
- * beer_recipe_1.features.field.inc
+ * beer_recipes.features.field.inc
  */
 
 /**
  * Implementation of hook_field_default_fields().
  */
-function beer_recipe_1_field_default_fields() {
+function beer_recipes_field_default_fields() {
   $fields = array();
 
   // Exported field: 'node-beer_recipe-body'

@@ -69,7 +69,7 @@ function beer_recipes_entity_presave($entity, $type)
  **/
 function beer_recipes_node_view($node, $view_mode, $langcode) 
 {
-	if ($node->type == 'beer_recipe') {
+	if ($node->type == 'beer_recipe' && $view_mode !== 'teaser') {
 		drupal_add_css(drupal_get_path('module', 'beer_recipes') .'/beer_recipes.css');
 		$cache_key = sprintf(BEER_RECIPE_CACHE_KEY, $node->nid);
 		// Get the markup from cache if it's available
@@ -94,7 +94,6 @@ function beer_recipes_node_view($node, $view_mode, $langcode)
 			'#markup' => $recipe_markup,
 			'#weight' => 0,
 		);
-	
 	}
 } // end function beer_recipe_view
 

@@ -14,7 +14,7 @@
 				<tr>
 					<td>Color:</td>
 					<xsl:variable name="srm_color">
-						<xsl:value-of select="EST_COLOR" />
+						<xsl:value-of select="translate(EST_COLOR, '.', '-')" />
 					</xsl:variable>
 					<td class="srm_{$srm_color}">&#160;</td>
 					<td>FG:</td>

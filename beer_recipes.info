@@ -1,7 +1,12 @@
 name = Beer Recipe
-description = Collect and display beer recipes.
-package = Recipe
+description = "Store BeerXML files and display their recipes"
+package = Features
+project = "beer_recipes"
+version = "7.x-1.0-alpha1"
 core = 7.x
-files[] = beer_recipe.module
-files[] = beer_recipe.install
-files[] = beer_recipe.test
+
+dependencies[] = "features"
+dependencies[] = "file"
+
+features[field][] = "node-beer_recipe-body"
+features[field][] = "node-beer_recipe_-field_beer_recipe_beerxml"

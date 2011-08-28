@@ -28,7 +28,12 @@ function beer_recipes_entity_presave($entity, $type)
 		$xpath = new DOMXpath($dom);
 		$name = $xpath->query('//RECIPE/NAME')->item(0)->nodeValue;
 		$brewer = $xpath->query('//RECIPE/BREWER')->item(0)->nodeValue;
-		$entity->title = sprintf('%s by %s', $name, $brewer);
+		if (strlen(trim($brewer)) > 0) {
+			$entity->title = sprintf('%s by %s', $name, $brewer);
+		}
+		else {
+			$entity->title = $name;
+		}
 
 
 		if (count($entity->field_beer_recipe_style['und']) == 0) {
@@ -38,6 +43,7 @@ function beer_recipes_entity_presave($entity, $type)
 				$styleLetter = $xpath->query('//STYLE/STYLE_LETTER')->item(0)->nodeValue;
 				$styleCategory = sprintf('%s%s', $categoryNumber, $styleLetter);
 				$term = taxonomy_get_term_by_name($styleCategory);
+
 				if (count($term) == 0) {
 					$term = new stdClass();
 					$term->name = sprintf('%s - %s %s', $styleCategory, $xpath->query('//STYLE/CATEGORY')->item(0)->nodeValue, $xpath->query('//STYLE/NAME')->item(0)->nodeValue);

@@ -2,28 +2,28 @@
 
 /**
  * @file
- * beer_recipe.module - share beer recipes (based on recipe.module)
+ * beer_recipes.module - share beer recipes (based on recipe.module)
  */
-define('BEER_RECIPE_CACHE_KEY', 'beer_recipe_markup_%s');
+define('BEER_RECIPE_CACHE_KEY', 'beer_recipes_markup_%s');
 
 /**
- * Implementation of hook_form
+ * Implementation of hook_form_beer_recipe_node_form_alter
  **/
-function beer_recipe_form_beer_recipe_node_form_alter(&$form, &$form_state) 
+function beer_recipes_form_beer_recipe_node_form_alter(&$form, &$form_state) 
 {
 	$form['title']['#required'] = FALSE;
 	$form['title']['#type'] = 'hidden';
 } // end function beer_recipe_form
 
 /**
- * Implementation of hook_node_presave
+ * Implementation of hook_entity_presave
  **/
-function beer_recipe_entity_presave($entity, $type) 
+function beer_recipes_entity_presave($entity, $type) 
 {
 	if ($type == 'node' && $entity->type == 'beer_recipe') {
-		$contents = file_get_contents($entity->original->field_beer_recipe_beerxml['und'][0]['uri']);
+		$file = file_load($entity->field_beer_recipe_beerxml['und'][0]['fid']);
 		$dom = new DOMDocument();
-		$dom->load($entity->original->field_beer_recipe_beerxml['und'][0]['uri']);
+		$dom->load($file->uri);
 		
 		$xpath = new DOMXpath($dom);
 		$name = $xpath->query('//RECIPE/NAME')->item(0)->nodeValue;
@@ -35,12 +35,12 @@ function beer_recipe_entity_presave($entity, $type)
 } // end function beer_recipe_node_presave
 
 /**
- * Implementation of hook_view
+ * Implementation of hook_node_view
  **/
-function beer_recipe_node_view($node, $view_mode, $langcode) 
+function beer_recipes_node_view($node, $view_mode, $langcode) 
 {
 	if ($node->type == 'beer_recipe') {
-		drupal_add_css(drupal_get_path('module', 'beer_recipe') .'/beer_recipe.css');
+		drupal_add_css(drupal_get_path('module', 'beer_recipe') .'/beer_recipes.css');
 		$cache_key = sprintf(BEER_RECIPE_CACHE_KEY, $node->nid);
 		// Get the markup from cache if it's available
 		if (($markup_cache = cache_get($cache_key)) === FALSE) {
@@ -48,7 +48,7 @@ function beer_recipe_node_view($node, $view_mode, $langcode)
 			$doc->load($node->field_beer_recipe_beerxml['und'][0]['uri']);
 
 			$styleDoc = new DOMDocument();
-			$styleDoc->load(dirname(__FILE__) .'/beer_recipe.xsl');
+			$styleDoc->load(dirname(__FILE__) .'/beer_recipes.xsl');
 
 			$xsl = new XSLTProcessor();
 			$xsl->importStylesheet($styleDoc);

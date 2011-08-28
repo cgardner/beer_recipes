@@ -12,9 +12,9 @@ function beer_recipes_node_info() {
     'beer_recipe' => array(
       'name' => t('Beer Recipe'),
       'base' => 'node_content',
-      'description' => t('A recipe for beer'),
+      'description' => t('Recipes for Beer'),
       'has_title' => '1',
-      'title_label' => t('Title'),
+      'title_label' => t('Name'),
       'help' => '',
     ),
   );

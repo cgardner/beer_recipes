@@ -78,7 +78,7 @@
 				<xsl:for-each select="FERMENTABLE">
 				<tr>
 					<td><xsl:value-of select="NAME" /></td> 
-					<td><xsl:value-of select="AMOUNT * 2.2" /> lb (<xsl:value-of select="AMOUNT" /> kg)</td> 
+					<td><xsl:value-of select="format-number(round(100 * (AMOUNT * 2.2)) div 100, '##.00')" /> lb (<xsl:value-of select="AMOUNT" /> kg)</td> 
 				</tr>
 				</xsl:for-each>
 			</tbody>

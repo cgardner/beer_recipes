@@ -1,12 +1,15 @@
-name = Beer Recipe
-description = "Store BeerXML files and display their recipes"
-package = Features
-project = "beer_recipes"
-version = "7.x-1.0-alpha1"
-core = 7.x
-
+core = "7.x"
 dependencies[] = "features"
+dependencies[] = "field_sql_storage"
 dependencies[] = "file"
-
+dependencies[] = "node"
+dependencies[] = "text"
+description = "Store BeerXML files and display their recipes"
 features[field][] = "node-beer_recipe-body"
-features[field][] = "node-beer_recipe_-field_beer_recipe_beerxml"
+features[field][] = "node-beer_recipe-field_beer_recipe_beerxml"
+features[node][] = "beer_recipe"
+name = "Beer Recipe"
+package = "Features"
+php = "5.2.4"
+project = "beer_recipes"
+version = "7.x-1.0-alpha2"

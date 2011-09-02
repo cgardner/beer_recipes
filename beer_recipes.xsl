@@ -7,7 +7,7 @@
 			<table>
 				<tr>
 					<td>Boil Time:</td>
-					<td><xsl:value-of select="BOIL_TIME" /> Minutes</td>
+					<td><xsl:if test="number(BOIL_TIME)"><xsl:value-of select="format-number(BOIL_TIME, '###')" /> Minutes</xsl:if></td>
 					<td>OG:</td>
 					<td><xsl:value-of select="format-number(OG, '#.000')" /></td>
 				</tr>
@@ -107,8 +107,13 @@
 						<td><xsl:value-of select="NAME" /></td>
 						<td><xsl:value-of select="ALPHA" />%</td>
 						<td><xsl:value-of select="format-number(round(100 * (AMOUNT * 35.273961)) div 100, '##.00')" /> oz (<xsl:value-of select="round(AMOUNT * 1000)" /> g)</td>
-						<td><xsl:value-of select="FORM" /></td>
-						<td><xsl:value-of select="format-number(TIME, '###')" /> Min From End</td>
+						<td>
+							<xsl:choose>
+								<xsl:when test="string-length(FORM) > 0">Unknown</xsl:when>
+								<xsl:otherwise><xsl:value-of select="FORM" /></xsl:otherwise>
+							</xsl:choose>
+						</td>
+						<td><xsl:if test="number(TIME)"><xsl:value-of select="format-number(TIME, '###')" /> Min From End</xsl:if></td>
 					</tr>
 				</xsl:for-each>
 			</tbody>

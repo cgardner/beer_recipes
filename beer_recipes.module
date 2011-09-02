@@ -26,47 +26,60 @@ function beer_recipes_entity_presave($entity, $type)
 		$dom->load($file->uri);
 		
 		$xpath = new DOMXpath($dom);
-		$name = $xpath->query('//RECIPE/NAME')->item(0)->nodeValue;
-		$brewer = $xpath->query('//RECIPE/BREWER')->item(0)->nodeValue;
-		if (strlen(trim($brewer)) > 0) {
-			$entity->title = sprintf('%s by %s', $name, $brewer);
+		$name = $xpath->query('//RECIPE/NAME');
+		$brewer = $xpath->query('//RECIPE/BREWER');
+		if ($name->length > 0 && $brewer->length > 0) {
+			$entity->title = sprintf('%s by %s', $name->item(0)->nodeValue, $brewer->item(0)->nodeValue);
 		}
-		else {
-			$entity->title = $name;
+		elseif ($name->length > 0 && $brewer->length <= 0) {
+			$entity->title = $name->item(0)->nodeValue;
 		}
-
+		
+		if (!isset($entity->title) || is_null($entity->title)) {
+			$entity->title = 'Unknown Recipe';
+		}
 
 		if (count($entity->field_beer_recipe_style['und']) == 0) {
 			$style = $xpath->query('//STYLE/CATEGORY_NUMBER');
-			if (count($style) > 0) {
+			$styleCategory = $xpath->query('//STYLE/CATEGORY');
+			$styleName = $xpath->query('//SYTLE/NAME');
+			if (count($style) > 0 && $styleCategory->length > 0 && $styleName->length > 0) {
 				$categoryNumber = $style->item(0)->nodeValue;
 				$styleLetter = $xpath->query('//STYLE/STYLE_LETTER')->item(0)->nodeValue;
 				$styleCategory = sprintf('%s%s', $categoryNumber, $styleLetter);
-				$term = taxonomy_get_term_by_name($styleCategory);
+				$termName = sprintf('%s - %s %s', $styleCategory, $xpath->query('//STYLE/CATEGORY')->item(0)->nodeValue, $xpath->query('//STYLE/NAME')->item(0)->nodeValue);
 
-				if (count($term) == 0) {
-					$term = new stdClass();
-					$term->name = sprintf('%s - %s %s', $styleCategory, $xpath->query('//STYLE/CATEGORY')->item(0)->nodeValue, $xpath->query('//STYLE/NAME')->item(0)->nodeValue);
-					$vocabularies = taxonomy_get_vocabularies();
-					reset($vocabularies);
-					$vid = FALSE;
-					while ($vid == FALSE && list(, $vocab) = each($vocabularies)) {
-						if ($vocab->machine_name == 'beer_style') {
-							$vid = $vocab->vid;
+				if ($styleCategory != '') {
+					$term = taxonomy_get_term_by_name($termName);
+
+					if (count($term) == 0) {
+						$term = new stdClass();
+						$term->name = $termName;
+						$vocabularies = taxonomy_get_vocabularies();
+						reset($vocabularies);
+						$vid = FALSE;
+						while ($vid == FALSE && list(, $vocab) = each($vocabularies)) {
+							if ($vocab->machine_name == 'beer_style') {
+								$vid = $vocab->vid;
+							}
 						}
+
+						$term->vid = $vid;
+						taxonomy_term_save($term);
 					}
 
-					$term->vid = $vid;
-					taxonomy_term_save($term);
+					if ($term instanceOf stdClass) {
+						$entity->field_beer_recipe_style['und'][0] = array(
+							'tid' => $term->tid,
+						);
+					}
 				}
-
-				$entity->field_beer_recipe_style['und'][0] = array(
-					'tid' => $term->tid,
-				);
 			}
 		}
 
-		cache_clear_all(sprintf(BEER_RECIPE_CACHE_KEY, $entity->nid), 'cache');
+		if (isset($entity->nid)) {
+			cache_clear_all(sprintf(BEER_RECIPE_CACHE_KEY, $entity->nid), 'cache');
+		}
 	}
 } // end function beer_recipe_node_presave
 
@@ -96,6 +109,11 @@ function beer_recipes_node_view($node, $view_mode, $langcode)
 			$recipe_markup = $markup_cache->data;
 		}
 
+		// If there is no markup to display to the user delete the node and redirect to the homepage
+		if (is_null($recipe_markup)) {
+			node_delete($node->nid);
+			drupal_goto('<front>');
+		}
 		$node->content['beer_recipe_markup'] = array(
 			'#markup' => $recipe_markup,
 			'#weight' => 0,
